@@ -19,7 +19,7 @@ def home():
         "company": "GoCar Ireland",
         "message": "Issue and Vulnerability Tracking API is running",
         "project_note": "This is an academic prototype using simulated data only.",
-        "database": "SQLite database configured successfully"
+        "database": "SQLite database configured successfully",
         "api_version": "1.0"
     })
 
