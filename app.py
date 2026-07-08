@@ -12,6 +12,23 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
+class Asset(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    asset_name = db.Column(db.String(120), nullable=False)
+    asset_type = db.Column(db.String(80), nullable=False)
+    department = db.Column(db.String(80), nullable=False)
+    criticality = db.Column(db.String(20), nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "asset_name": self.asset_name,
+            "asset_type": self.asset_type,
+            "department": self.department,
+            "criticality": self.criticality
+        }
+
+
 @app.route("/")
 def home():
     return jsonify({
