@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
@@ -39,6 +39,83 @@ def home():
         "database": "SQLite database configured successfully",
         "api_version": "1.0"
     })
+
+
+@app.route("/api/assets", methods=["POST"])
+def create_asset():
+    data = request.get_json()
+
+    asset = Asset(
+        asset_name=data["asset_name"],
+        asset_type=data["asset_type"],
+        department=data["department"],
+        criticality=data["criticality"]
+    )
+
+    db.session.add(asset)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Asset created successfully",
+        "asset": asset.to_dict()
+    }), 201
+
+
+@app.route("/api/assets", methods=["GET"])
+def get_assets():
+    assets = Asset.query.all()
+
+    return jsonify({
+        "total_assets": len(assets),
+        "assets": [asset.to_dict() for asset in assets]
+    }), 200
+
+
+@app.route("/api/assets/<int:asset_id>", methods=["GET"])
+def get_asset(asset_id):
+    asset = Asset.query.get(asset_id)
+
+    if asset is None:
+        return jsonify({"error": "Asset not found"}), 404
+
+    return jsonify(asset.to_dict()), 200
+
+
+@app.route("/api/assets/<int:asset_id>", methods=["PUT"])
+def update_asset(asset_id):
+    asset = Asset.query.get(asset_id)
+
+    if asset is None:
+        return jsonify({"error": "Asset not found"}), 404
+
+    data = request.get_json()
+
+    asset.asset_name = data["asset_name"]
+    asset.asset_type = data["asset_type"]
+    asset.department = data["department"]
+    asset.criticality = data["criticality"]
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Asset updated successfully",
+        "asset": asset.to_dict()
+    }), 200
+
+
+@app.route("/api/assets/<int:asset_id>", methods=["DELETE"])
+def delete_asset(asset_id):
+    asset = Asset.query.get(asset_id)
+
+    if asset is None:
+        return jsonify({"error": "Asset not found"}), 404
+
+    db.session.delete(asset)
+    db.session.commit()
+
+    return jsonify({
+        "message": "Asset deleted successfully"
+    }), 200
 
 
 with app.app_context():
