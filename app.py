@@ -66,7 +66,7 @@ def get_assets():
     assets = Asset.query.all()
 
     return jsonify({
-        "total_assets": len(assets),
+        "asset_count": len(assets),
         "assets": [asset.to_dict() for asset in assets]
     }), 200
 
