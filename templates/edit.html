@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Issue</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>SecureFleet</h1>
+    <p>Edit Issue Record</p>
+</header>
+
+<main>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <section class="form-section">
+        <h2>Edit Issue #{{ issue.id }}</h2>
+
+        <form action="/issues/{{ issue.id }}/update" method="POST">
+
+            <label>Issue Title</label>
+            <input type="text" name="title" value="{{ issue.title }}" required>
+
+            <label>Description</label>
+            <textarea name="description" required>{{ issue.description }}</textarea>
+
+            <label>Affected Asset</label>
+            <input type="text" name="asset_name" value="{{ issue.asset_name }}" required>
+
+            <label>Issue Type</label>
+            <select name="issue_type" required>
+                <option value="Bug" {% if issue.issue_type == "Bug" %}selected{% endif %}>Bug</option>
+                <option value="Vulnerability" {% if issue.issue_type == "Vulnerability" %}selected{% endif %}>Vulnerability</option>
+                <option value="Security Issue" {% if issue.issue_type == "Security Issue" %}selected{% endif %}>Security Issue</option>
+                <option value="Configuration Issue" {% if issue.issue_type == "Configuration Issue" %}selected{% endif %}>Configuration Issue</option>
+            </select>
+
+            <label>Severity</label>
+            <select name="severity" required>
+                <option value="Low" {% if issue.severity == "Low" %}selected{% endif %}>Low</option>
+                <option value="Medium" {% if issue.severity == "Medium" %}selected{% endif %}>Medium</option>
+                <option value="High" {% if issue.severity == "High" %}selected{% endif %}>High</option>
+                <option value="Critical" {% if issue.severity == "Critical" %}selected{% endif %}>Critical</option>
+            </select>
+
+            <label>Status</label>
+            <select name="status" required>
+                <option value="Open" {% if issue.status == "Open" %}selected{% endif %}>Open</option>
+                <option value="In Progress" {% if issue.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                <option value="Resolved" {% if issue.status == "Resolved" %}selected{% endif %}>Resolved</option>
+                <option value="Closed" {% if issue.status == "Closed" %}selected{% endif %}>Closed</option>
+            </select>
+
+            <label>Reported By</label>
+            <input type="text" name="reported_by" value="{{ issue.reported_by }}" required>
+
+            <label>Assigned To</label>
+            <input type="text" name="assigned_to" value="{{ issue.assigned_to }}" required>
+
+            <label>Due Date</label>
+            <input type="date" name="due_date" value="{{ issue.due_date }}" required>
+
+            <label>Resolution Notes</label>
+            <textarea name="resolution_notes">{{ issue.resolution_notes }}</textarea>
+
+            <div class="button-row">
+                <button type="submit">Update Issue</button>
+                <a href="/" class="cancel-link">Cancel</a>
+            </div>
+        </form>
+    </section>
+
+</main>
+
+</body>
+</html>
