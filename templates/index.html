@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SecureFleet Issue Tracker</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1>SecureLidl</h1>
+    <p>Issue and Vulnerability Tracking System for Lidl Ireland</p>
+    <p class="small-text">Academic prototype using simulated data only</p>
+</header>
+
+<main>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="message {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+<!-- Form Section -->
+    <section class="form-section">
+        <h2>Add New Issue</h2>
+
+        <form action="/issues/create" method="POST">
+
+            <label>Issue Title</label>
+            <input type="text" name="title" required>
+
+            <label>Description</label>
+            <textarea name="description" required></textarea>
+
+            <label>Affected Asset</label>
+            <input type="text" name="asset_name" placeholder="Example: GoCar Mobile Booking App" required>
+
+            <label>Issue Type</label>
+            <select name="issue_type" required>
+                <option value="">Select issue type</option>
+                <option value="Bug">Bug</option>
+                <option value="Vulnerability">Vulnerability</option>
+                <option value="Security Issue">Security Issue</option>
+                <option value="Configuration Issue">Configuration Issue</option>
+            </select>
+
+            <label>Severity</label>
+            <select name="severity" required>
+                <option value="">Select severity</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Critical">Critical</option>
+            </select>
+
+            <label>Status</label>
+            <select name="status" required>
+                <option value="">Select status</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+            </select>
+
+            <label>Reported By</label>
+            <input type="text" name="reported_by" required>
+
+            <label>Assigned To</label>
+            <input type="text" name="assigned_to" required>
+
+            <label>Due Date</label>
+            <input type="date" name="due_date" required>
+
+            <label>Resolution Notes</label>
+            <textarea name="resolution_notes"></textarea>
+
+            <div class="button-row">
+                <button type="submit">Create Issue</button>
+                <button type="reset" class="secondary-button">Clear Form</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="table-section">
+        <h2>Issue List</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Asset</th>
+                    <th>Type</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Due</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for issue in issues %}
+                <tr>
+                    <td>{{ issue.id }}</td>
+                    <td>{{ issue.title }}</td>
+                    <td>{{ issue.asset_name }}</td>
+                    <td>{{ issue.issue_type }}</td>
+                    <td>{{ issue.severity }}</td>
+                    <td>{{ issue.status }}</td>
+                    <td>{{ issue.created_date }}</td>
+                    <td>{{ issue.due_date }}</td>
+                    <td class="action-cell">
+                        <a href="/issues/{{ issue.id }}/edit" class="edit-link">Edit</a>
+
+                        <form action="/issues/{{ issue.id }}/delete" method="POST" class="delete-form">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" class="empty-message">No issues have been added yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+</main>
+
+</body>
+</html>
