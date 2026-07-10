@@ -1,0 +1,176 @@
+
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+}
+
+header {
+    background-color: #102a43;
+    color: white;
+    text-align: center;
+    padding: 24px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+.small-text {
+    font-size: 14px;
+    color: #d9e2ec;
+}
+
+main {
+    width: 92%;
+    margin: 20px auto;
+}
+
+.form-section,
+.table-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #d9e2ec;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    padding: 10px;
+    border: 1px solid #bcccdc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+textarea {
+    min-height: 70px;
+}
+
+.button-row {
+    grid-column: span 2;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+button {
+    padding: 10px 14px;
+    background-color: #102a43;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #243b53;
+}
+
+.secondary-button {
+    background-color: #627d98;
+}
+
+.cancel-link,
+.edit-link {
+    display: inline-block;
+    padding: 9px 12px;
+    background-color: #0b7285;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.cancel-link {
+    background-color: #627d98;
+}
+
+.delete-button {
+    background-color: #c92a2a;
+    padding: 8px 10px;
+}
+
+.message {
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.success {
+    background-color: #d3f9d8;
+    color: #2b8a3e;
+}
+
+.error {
+    background-color: #ffe3e3;
+    color: #c92a2a;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #102a43;
+    color: white;
+}
+
+th,
+td {
+    border: 1px solid #d9e2ec;
+    padding: 10px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f0f4f8;
+}
+
+.action-cell {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.delete-form {
+    display: inline;
+}
+
+.empty-message {
+    text-align: center;
+    font-weight: bold;
+    color: #627d98;
+}
+
+@media screen and (max-width: 900px) {
+    form {
+        grid-template-columns: 1fr;
+    }
+
+    .button-row {
+        grid-column: span 1;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .action-cell {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
