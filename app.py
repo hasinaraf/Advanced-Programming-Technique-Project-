@@ -20,13 +20,51 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # create database object
 db = SQLAlchemy(app)
 
+# Issue table for storing issue and vulnerability records
+class Issue(db.Model):
+    # unique ID for each issue
+    id = db.Column(db.Integer, primary_key=True)
+
+    # issue title
+    title = db.Column(db.String(150), nullable=False)
+
+    # issue details
+    description = db.Column(db.Text, nullable=False)
+
+    # affected system or asset
+    asset_name = db.Column(db.String(120), nullable=False)
+
+    # type of issue
+    issue_type = db.Column(db.String(50), nullable=False)
+
+    # issue severity
+    severity = db.Column(db.String(20), nullable=False)
+
+    # issue progress status
+    status = db.Column(db.String(30), nullable=False)
+
+    # who reported the issue
+    reported_by = db.Column(db.String(100), nullable=False)
+
+    # who is assigned to fix it
+    assigned_to = db.Column(db.String(100), nullable=False)
+
+    # date the issue was created
+    created_date = db.Column(db.String(20), nullable=False)
+
+    # target fix date
+    due_date = db.Column(db.String(20), nullable=False)
+
+    # optional notes after fixing
+    resolution_notes = db.Column(db.Text, nullable=True)
+
 # home route to check if the website is running
 @app.route("/")
 def index():
     return "SecureFleet Issue Tracker is running"
 
 
-# API route to check backend status
+# API health route to check backend status
 @app.route("/api/health", methods=["GET"])
 def health_check():
     return jsonify({
