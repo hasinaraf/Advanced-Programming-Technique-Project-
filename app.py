@@ -7,12 +7,18 @@ from flask_sqlalchemy import SQLAlchemy
 # create Flask app
 app = Flask(__name__)
 
-# create the app
-app = Flask(__name__)
-# configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-# initialize the app with the extension
-db.init_app(app)
+# secret key is needed for Flask messages later
+app.secret_key = "securefleet-development-key"
+
+# enable CORS for API access
+CORS(app)
+
+# configure SQLite database
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///securefleet_nojs.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# create database object
+db = SQLAlchemy(app)
 
 # home route to check if the website is running
 @app.route("/")
