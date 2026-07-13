@@ -12,6 +12,10 @@ def index():
     return "SecureFleet Issue Tracker is running"
 
 
+@app.route("/")
+def index():
+    return "Hello, World!"
+
 
 # run Flask app
 if __name__ == "__main__":
