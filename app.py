@@ -12,9 +12,14 @@ def index():
     return "SecureFleet Issue Tracker is running"
 
 
-@app.route("/")
-def index():
-    return "Hello, World!"
+# API route to check backend status
+@app.route("/api/health", methods=["GET"])
+def health_check():
+    return jsonify({
+        "system_name": "SecureFleet",
+        "company": "GoCar Ireland",
+        "message": "API is running"
+    })
 
 
 # run Flask app
