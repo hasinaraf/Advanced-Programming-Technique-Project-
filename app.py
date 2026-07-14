@@ -294,13 +294,33 @@ def api_get_issue(issue_id):
     return jsonify(issue.to_dict()), 200
 
 
-@app.route('/users', methods=['POST'])
-def create_user():
-    data = request.get_json()
-    user_id = len(users) + 1
-    user = {'id': user_id, 'name': data['name'], 'email': data['email']}
-    users[user_id] = user
-    return user
+# API route to create a new issue using JSON data
+@app.route("/api/issues", methods=["POST"])
+def api_create_issue():
+    # read JSON data sent to the API
+    data = request.get_json(silent=True) or {}
+
+    # check JSON data before saving
+    error = validate_issue_data(data)
+    if error:
+        return jsonify({"error": error}), 400
+
+    # create a new issue and set today's date
+    issue = Issue(created_date=date.today().strftime("%Y-%m-%d"))
+
+    # copy JSON values into the issue object
+    apply_issue_data(issue, data)
+
+    # save the new issue into the database
+    db.session.add(issue)
+    db.session.commit()
+
+    # return success message and created issue as JSON
+    return jsonify({
+        "message": "Issue created successfully",
+        "issue": issue.to_dict()
+    }), 201
+
 
 # create database tables if they exist in the code
 with app.app_context():
