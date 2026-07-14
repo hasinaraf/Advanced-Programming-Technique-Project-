@@ -193,6 +193,21 @@ def web_create_issue():
     return redirect(url_for("index"))
 
 
+# open edit page for one selected issue
+@app.route("/issues/<int:issue_id>/edit", methods=["GET"])
+def web_edit_issue(issue_id):
+    # find the issue using its ID
+    issue = Issue.query.get(issue_id)
+
+    # if the issue does not exist, go back to homepage
+    if issue is None:
+        flash("Issue not found", "error")
+        return redirect(url_for("index"))
+
+    # send the selected issue to edit.html
+    return render_template("edit.html", issue=issue)
+
+
 # API health route to check backend status
 @app.route("/api/health", methods=["GET"])
 def health_check():
@@ -210,4 +225,4 @@ with app.app_context():
 
 # run Flask app
 if __name__ == "__main__":
-    app.run(debug=True) 
+    app.run(debug=True)
