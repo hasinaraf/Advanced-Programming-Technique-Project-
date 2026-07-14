@@ -294,6 +294,14 @@ def api_get_issue(issue_id):
     return jsonify(issue.to_dict()), 200
 
 
+@app.route('/users', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    user_id = len(users) + 1
+    user = {'id': user_id, 'name': data['name'], 'email': data['email']}
+    users[user_id] = user
+    return user
+
 # create database tables if they exist in the code
 with app.app_context():
     db.create_all()
