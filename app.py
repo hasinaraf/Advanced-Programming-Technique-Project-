@@ -208,25 +208,34 @@ def web_edit_issue(issue_id):
     return render_template("edit.html", issue=issue)
 
 
-@app.route('/data/<int:id>/update', methods=['GET', 'POST'])
-def update(id):
-    employee = EmployeeModel.query.filter_by(employee_id=id).first()
-    if request.method == 'POST':
-        if employee:
-            db.session.delete(employee)
-            db.session.commit()
- 
-            name = request.form['name']
-            age = request.form['age']
-            position = request.form['position']
-            employee = EmployeeModel(employee_id=id, name=name, age=age, position=position)
- 
-            db.session.add(employee)
-            db.session.commit()
-            return redirect(f'/data/{id}')
-        return f"Employee with id = {id} Does not exist"
- 
-    return render_template('update.html', employee=employee)
+# update issue from the edit form
+@app.route("/issues/<int:issue_id>/update", methods=["POST"])
+def web_update_issue(issue_id):
+    # find the existing issue using its ID
+    issue = Issue.query.get(issue_id)
+
+    # if issue ID is wrong, return to homepage
+    if issue is None:
+        flash("Issue not found", "error")
+        return redirect(url_for("index"))
+
+    # get updated form data from edit.html
+    data = request.form
+
+    # validate updated data before saving
+    error = validate_issue_data(data)
+    if error:
+        flash(error, "error")
+        return redirect(url_for("web_edit_issue", issue_id=issue_id))
+
+    # copy updated values into the existing issue
+    apply_issue_data(issue, data)
+
+    # save updated issue in database
+    db.session.commit()
+
+    flash("Issue updated successfully", "success")
+    return redirect(url_for("index"))
 
 
 # API health route to check backend status
