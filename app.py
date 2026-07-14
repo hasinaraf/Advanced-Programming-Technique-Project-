@@ -1,5 +1,7 @@
 # Flask app for the issue tracker
 
+from datetime import datetime
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -75,6 +77,72 @@ class Issue(db.Model):
             "due_date": self.due_date,
             "resolution_notes": self.resolution_notes or ""
         }
+
+
+# check issue data before saving it
+def validate_issue_data(data):
+    # these fields must be filled by the user
+    required_fields = [
+        "title",
+        "description",
+        "asset_name",
+        "issue_type",
+        "severity",
+        "status",
+        "reported_by",
+        "assigned_to",
+        "due_date"
+    ]
+
+    # accepted issue type values
+    allowed_issue_types = [
+        "Bug",
+        "Vulnerability",
+        "Security Issue",
+        "Configuration Issue"
+    ]
+
+    # accepted severity values
+    allowed_severities = [
+        "Low",
+        "Medium",
+        "High",
+        "Critical"
+    ]
+
+    # accepted status values
+    allowed_statuses = [
+        "Open",
+        "In Progress",
+        "Resolved",
+        "Closed"
+    ]
+
+    # check if any required field is empty
+    for field in required_fields:
+        if field not in data or str(data[field]).strip() == "":
+            return f"{field} is required"
+
+    # check issue type
+    if data["issue_type"] not in allowed_issue_types:
+        return "Issue type must be Bug, Vulnerability, Security Issue, or Configuration Issue"
+
+    # check severity
+    if data["severity"] not in allowed_severities:
+        return "Severity must be Low, Medium, High, or Critical"
+
+    # check status
+    if data["status"] not in allowed_statuses:
+        return "Status must be Open, In Progress, Resolved, or Closed"
+
+    # check due date format
+    try:
+        datetime.strptime(data["due_date"], "%Y-%m-%d")
+    except ValueError:
+        return "Due date must use YYYY-MM-DD format"
+
+    # no validation error
+    return None
 
 
 # home route to check if the website is running
