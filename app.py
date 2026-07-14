@@ -267,6 +267,22 @@ def health_check():
     })
 
 
+# API route to get all issues as JSON
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    return users
+
+
+# API route to get one issue by ID as JSON
+@app.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = users.get(user_id)
+    if user:
+        return user
+    else:
+        return {'error': 'User not found'}
+
+
 # create database tables if they exist in the code
 with app.app_context():
     db.create_all()
