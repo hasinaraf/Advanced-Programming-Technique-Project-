@@ -194,18 +194,25 @@ def web_create_issue():
 
 
 # open edit page for one selected issue
-@app.route("/issues/<int:issue_id>/edit", methods=["GET"])
-def web_edit_issue(issue_id):
-    # find the issue using its ID
-    issue = Issue.query.get(issue_id)
-
-    # if the issue does not exist, go back to homepage
-    if issue is None:
-        flash("Issue not found", "error")
-        return redirect(url_for("index"))
-
-    # send the selected issue to edit.html
-    return render_template("edit.html", issue=issue)
+@app.route('/data/<int:id>/update', methods=['GET', 'POST'])
+def update(id):
+    employee = EmployeeModel.query.filter_by(employee_id=id).first()
+    if request.method == 'POST':
+        if employee:
+            db.session.delete(employee)
+            db.session.commit()
+ 
+            name = request.form['name']
+            age = request.form['age']
+            position = request.form['position']
+            employee = EmployeeModel(employee_id=id, name=name, age=age, position=position)
+ 
+            db.session.add(employee)
+            db.session.commit()
+            return redirect(f'/data/{id}')
+        return f"Employee with id = {id} Does not exist"
+ 
+    return render_template('update.html', employee=employee)
 
 
 # API health route to check backend status
