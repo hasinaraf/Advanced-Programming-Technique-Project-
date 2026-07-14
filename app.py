@@ -145,6 +145,20 @@ def validate_issue_data(data):
     return None
 
 
+# copy submitted data into the issue object
+def apply_issue_data(issue, data):
+    issue.title = data["title"].strip()
+    issue.description = data["description"].strip()
+    issue.asset_name = data["asset_name"].strip()
+    issue.issue_type = data["issue_type"]
+    issue.severity = data["severity"]
+    issue.status = data["status"]
+    issue.reported_by = data["reported_by"].strip()
+    issue.assigned_to = data["assigned_to"].strip()
+    issue.due_date = data["due_date"]
+    issue.resolution_notes = data.get("resolution_notes", "").strip()
+
+
 # home route to check if the website is running
 @app.route("/")
 def index():
