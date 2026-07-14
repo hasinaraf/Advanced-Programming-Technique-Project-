@@ -238,6 +238,20 @@ def web_update_issue(issue_id):
     return redirect(url_for("index"))
 
 
+# delete issue from the issue list
+@app.route('/data/<int:id>/delete', methods=['GET', 'POST'])
+def delete(id):
+    employee = EmployeeModel.query.filter_by(employee_id=id).first()
+    if request.method == 'POST':
+        if employee:
+            db.session.delete(employee)
+            db.session.commit()
+            return redirect('/data')
+        abort(404)
+ 
+    return render_template('delete.html')
+
+
 # API health route to check backend status
 @app.route("/api/health", methods=["GET"])
 def health_check():
