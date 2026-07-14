@@ -20,6 +20,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # create database object
 db = SQLAlchemy(app)
 
+
 # Issue table for storing issue and vulnerability records
 class Issue(db.Model):
     # unique ID for each issue
@@ -58,6 +59,24 @@ class Issue(db.Model):
     # optional notes after fixing
     resolution_notes = db.Column(db.Text, nullable=True)
 
+    # convert issue object into dictionary format for API response
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "asset_name": self.asset_name,
+            "issue_type": self.issue_type,
+            "severity": self.severity,
+            "status": self.status,
+            "reported_by": self.reported_by,
+            "assigned_to": self.assigned_to,
+            "created_date": self.created_date,
+            "due_date": self.due_date,
+            "resolution_notes": self.resolution_notes or ""
+        }
+
+
 # home route to check if the website is running
 @app.route("/")
 def index():
@@ -72,6 +91,7 @@ def health_check():
         "company": "Lidl Ireland",
         "message": "API is running"
     })
+
 
 # create database tables if they exist in the code
 with app.app_context():
