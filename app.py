@@ -354,13 +354,23 @@ def api_update_issue(issue_id):
 
 
 # API route to delete an issue using its ID
-@app.route('/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    user = users.pop(user_id, None)
-    if user:
-        return {'message': 'User deleted successfully'}
-    else:
-        return {'error': 'User not found'}
+@app.route("/api/issues/<int:issue_id>", methods=["DELETE"])
+def api_delete_issue(issue_id):
+    # find the issue using its ID
+    issue = Issue.query.get(issue_id)
+
+    # return error if the issue does not exist
+    if issue is None:
+        return jsonify({"error": "Issue not found"}), 404
+
+    # delete the issue from the database
+    db.session.delete(issue)
+    db.session.commit()
+
+    # return success message as JSON
+    return jsonify({
+        "message": "Issue deleted successfully"
+    }), 200
 
 
 # create database tables if they exist in the code
