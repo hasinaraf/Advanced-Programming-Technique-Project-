@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
@@ -159,10 +159,12 @@ def apply_issue_data(issue, data):
     issue.resolution_notes = data.get("resolution_notes", "").strip()
 
 
-# home route to check if the website is running
+# homepage route
+# gets all issues from database and sends them to index.html
 @app.route("/")
 def index():
-    return "SecureFleet Issue Tracker is running"
+    issues = Issue.query.order_by(Issue.id.asc()).all()
+    return render_template("index.html", issues=issues)
 
 
 # API health route to check backend status
