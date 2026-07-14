@@ -321,16 +321,36 @@ def api_create_issue():
         "issue": issue.to_dict()
     }), 201
 
-@app.route('/users/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    user = users.get(user_id)
-    if user:
-        data = request.get_json()
-        user['name'] = data['name']
-        user['email'] = data['email']
-        return user
-    else:
-        return {'error': 'User not found'}
+
+# API route to update an existing issue using JSON data
+@app.route("/api/issues/<int:issue_id>", methods=["PUT"])
+def api_update_issue(issue_id):
+    # find the existing issue using its ID
+    issue = Issue.query.get(issue_id)
+
+    # return error if the issue does not exist
+    if issue is None:
+        return jsonify({"error": "Issue not found"}), 404
+
+    # read JSON data sent to the API
+    data = request.get_json(silent=True) or {}
+
+    # check JSON data before updating
+    error = validate_issue_data(data)
+    if error:
+        return jsonify({"error": error}), 400
+
+    # copy new JSON values into the existing issue
+    apply_issue_data(issue, data)
+
+    # save the updated issue in the database
+    db.session.commit()
+
+    # return success message and updated issue as JSON
+    return jsonify({
+        "message": "Issue updated successfully",
+        "issue": issue.to_dict()
+    }), 200
 
 
 # create database tables if they exist in the code
