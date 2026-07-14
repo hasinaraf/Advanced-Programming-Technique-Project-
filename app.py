@@ -239,17 +239,22 @@ def web_update_issue(issue_id):
 
 
 # delete issue from the issue list
-@app.route('/data/<int:id>/delete', methods=['GET', 'POST'])
-def delete(id):
-    employee = EmployeeModel.query.filter_by(employee_id=id).first()
-    if request.method == 'POST':
-        if employee:
-            db.session.delete(employee)
-            db.session.commit()
-            return redirect('/data')
-        abort(404)
- 
-    return render_template('delete.html')
+@app.route("/issues/<int:issue_id>/delete", methods=["POST"])
+def web_delete_issue(issue_id):
+    # find the issue using its ID
+    issue = Issue.query.get(issue_id)
+
+    # if issue ID is wrong, return to homepage
+    if issue is None:
+        flash("Issue not found", "error")
+        return redirect(url_for("index"))
+
+    # delete the issue from database
+    db.session.delete(issue)
+    db.session.commit()
+
+    flash("Issue deleted successfully", "success")
+    return redirect(url_for("index"))
 
 
 # API health route to check backend status
