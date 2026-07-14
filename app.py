@@ -1,8 +1,8 @@
 # Flask app for the issue tracker
 
-from datetime import datetime
+from datetime import date, datetime
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 
@@ -167,6 +167,22 @@ def index():
     return render_template("index.html", issues=issues)
 
 
+@app.route('/data/create', methods=['GET', 'POST'])
+def create():
+    if request.method == 'GET':
+        return render_template('createpage.html')
+ 
+    if request.method == 'POST':
+        employee_id = request.form['employee_id']
+        name = request.form['name']
+        age = request.form['age']
+        position = request.form['position']
+        employee = EmployeeModel(employee_id=employee_id, name=name, age=age, position=position)
+        db.session.add(employee)
+        db.session.commit()
+        return redirect('/data')
+
+
 # API health route to check backend status
 @app.route("/api/health", methods=["GET"])
 def health_check():
@@ -184,4 +200,4 @@ with app.app_context():
 
 # run Flask app
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True) 
