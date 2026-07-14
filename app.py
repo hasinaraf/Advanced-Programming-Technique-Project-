@@ -69,7 +69,7 @@ def index():
 def health_check():
     return jsonify({
         "system_name": "SecureFleet",
-        "company": "GoCar Ireland",
+        "company": "Lidl Ireland",
         "message": "API is running"
     })
 
