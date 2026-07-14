@@ -167,20 +167,30 @@ def index():
     return render_template("index.html", issues=issues)
 
 
-@app.route('/data/create', methods=['GET', 'POST'])
-def create():
-    if request.method == 'GET':
-        return render_template('createpage.html')
- 
-    if request.method == 'POST':
-        employee_id = request.form['employee_id']
-        name = request.form['name']
-        age = request.form['age']
-        position = request.form['position']
-        employee = EmployeeModel(employee_id=employee_id, name=name, age=age, position=position)
-        db.session.add(employee)
-        db.session.commit()
-        return redirect('/data')
+# create issue from the HTML form
+@app.route("/issues/create", methods=["POST"])
+def web_create_issue():
+    # get form data from browser
+    data = request.form
+
+    # check the form data before saving
+    error = validate_issue_data(data)
+    if error:
+        flash(error, "error")
+        return redirect(url_for("index"))
+
+    # create a new issue and set today's date
+    issue = Issue(created_date=date.today().strftime("%Y-%m-%d"))
+
+    # copy form values into the issue object
+    apply_issue_data(issue, data)
+
+    # save the new issue into the database
+    db.session.add(issue)
+    db.session.commit()
+
+    flash("Issue created successfully", "success")
+    return redirect(url_for("index"))
 
 
 # API health route to check backend status
