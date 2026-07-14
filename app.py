@@ -353,6 +353,16 @@ def api_update_issue(issue_id):
     }), 200
 
 
+# API route to delete an issue using its ID
+@app.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = users.pop(user_id, None)
+    if user:
+        return {'message': 'User deleted successfully'}
+    else:
+        return {'error': 'User not found'}
+
+
 # create database tables if they exist in the code
 with app.app_context():
     db.create_all()
