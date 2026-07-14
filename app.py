@@ -321,6 +321,17 @@ def api_create_issue():
         "issue": issue.to_dict()
     }), 201
 
+@app.route('/users/<int:user_id>', methods=['PUT'])
+def update_user(user_id):
+    user = users.get(user_id)
+    if user:
+        data = request.get_json()
+        user['name'] = data['name']
+        user['email'] = data['email']
+        return user
+    else:
+        return {'error': 'User not found'}
+
 
 # create database tables if they exist in the code
 with app.app_context():
